@@ -1,0 +1,106 @@
+{
+ "entries": {
+  "08672a54c4578f388c27a0eb4bd8776ba20dccc92b5885a2f117419d9274ad08": {
+   "input_tokens": 78,
+   "output_tokens": 28,
+   "text": "{\"intent\": \"order_status\", \"order_number\": \"4903\", \"sentiment\": \"neutral\", \"requested_action\": \"send_tracking\"}"
+  },
+  "149271c122d3bf638361515dd87e19e7b9b8b53c240859577c8ae0462b52c549": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"7601\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "14e44d51d78b450ee5a90e22b60bdb5e091af43303a6488e816297a9fdf08200": {
+   "input_tokens": 83,
+   "output_tokens": 27,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"5815\", \"sentiment\": \"negative\", \"requested_action\": \"issue_refund\"}"
+  },
+  "191af86e03e3bd0ab50aa2055df2ec07d4142b7abde7dab09f7de1a039f6cb26": {
+   "input_tokens": 78,
+   "output_tokens": 28,
+   "text": "{\"intent\": \"order_status\", \"order_number\": \"1942\", \"sentiment\": \"neutral\", \"requested_action\": \"send_tracking\"}"
+  },
+  "209e04876793e5e79034e2dcfcb2dff166a27c908fb80b5dc83b1ad907480ce2": {
+   "input_tokens": 79,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"cancel\", \"order_number\": \"4052\", \"sentiment\": \"neutral\", \"requested_action\": \"cancel_order\"}"
+  },
+  "228f75329664fee34569cdf844463980b0527363b8b37f4af50e807d77c708ff": {
+   "input_tokens": 78,
+   "output_tokens": 28,
+   "text": "{\"intent\": \"order_status\", \"order_number\": \"2105\", \"sentiment\": \"neutral\", \"requested_action\": \"send_tracking\"}"
+  },
+  "4f61bdab6c61e84ec7f65950876cf44b50ae3972ff53ba40afc7dd1a93090a37": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"2048\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "62320b3b748f7d6d72678b8f63956dc6d4355aece63184c44c49b25146544ce5": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"3163\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "6271509750d95a9eaec62b396dcb8a69fdeb05e2be8551cfad540267c7320fce": {
+   "input_tokens": 83,
+   "output_tokens": 27,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"7176\", \"sentiment\": \"negative\", \"requested_action\": \"issue_refund\"}"
+  },
+  "66b60fded5c4d044c5890ce6086121237b477b49da5ef1c115d8db9ba5373692": {
+   "input_tokens": 79,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"cancel\", \"order_number\": \"1291\", \"sentiment\": \"neutral\", \"requested_action\": \"cancel_order\"}"
+  },
+  "b79773e408c8955d63f215f862b1da0150b956b843b755033651f5e666647c19": {
+   "input_tokens": 80,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"cancel\", \"order_number\": \"7762\", \"sentiment\": \"neutral\", \"requested_action\": \"cancel_order\"}"
+  },
+  "bc33b9bc3c6ef1d465b7dfda0cd94d7d32ee8180f8a51460775501afb91e1589": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"1120\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "c1c592b326bfe097e99c0a8a40059a37200d250efce3420975bae047df85f591": {
+   "input_tokens": 78,
+   "output_tokens": 28,
+   "text": "{\"intent\": \"order_status\", \"order_number\": \"9174\", \"sentiment\": \"neutral\", \"requested_action\": \"send_tracking\"}"
+  },
+  "c97b3b8a7bb10da44d1ebc00291cade19f3df656828f503d3ca81fea46ecea13": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"1686\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "d0e72d842a807852193e1319e15ab75f2538ca536b0b0b4d3a450e50abb06135": {
+   "input_tokens": 80,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"cancel\", \"order_number\": \"7903\", \"sentiment\": \"neutral\", \"requested_action\": \"cancel_order\"}"
+  },
+  "dc6c669aaa3c84a68d68857b1f4ad4d01df34e2a3778c51a2cafc27b394c9c77": {
+   "input_tokens": 80,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"cancel\", \"order_number\": \"9400\", \"sentiment\": \"neutral\", \"requested_action\": \"cancel_order\"}"
+  },
+  "e46a1ce030f5a090c351401e012a5ead2bb7d10c3270a1116053e64266db3012": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"2625\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "e93a3aee96f7a8666cf5a5738a3880947df3b298bfc68ec29e3ba79d3928d665": {
+   "input_tokens": 83,
+   "output_tokens": 27,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"6714\", \"sentiment\": \"negative\", \"requested_action\": \"issue_refund\"}"
+  },
+  "ebf046947168914ffeec7c84a4a240ba1acc63c4d8bd0d77628c26e880512b9a": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"3422\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  },
+  "ff7eed09e8f60323720ac2a79711e7cb346dcad9c584da506a1338ad0c221ffa": {
+   "input_tokens": 82,
+   "output_tokens": 26,
+   "text": "{\"intent\": \"refund\", \"order_number\": \"2628\", \"sentiment\": \"neutral\", \"requested_action\": \"issue_refund\"}"
+  }
+ },
+ "model": "authored-fake-model",
+ "provenance": "authored by scripts/smoke.py --author from the fake model; not a model recording. Replace with `make record`."
+}
