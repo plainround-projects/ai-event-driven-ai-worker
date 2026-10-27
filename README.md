@@ -17,7 +17,7 @@ A worker for the support inbox. Each "email received" event, arriving through a 
 | --- | --- | --- |
 | Python | 3.12 or 3.13 (tested with 3.13.12; CI uses 3.13) | the webhook, the worker, the measurements |
 | GNU Make | 3.81 or newer | every command below |
-| Docker | 24 or newer, with Compose | PostgreSQL 16 (`make up`); the image (`make docker-build`) |
+| Docker | 24 or newer, with Compose | PostgreSQL 16 (`make up`); the image (`make docker-build`, which was not built during this work: Docker's storage failed on the build machine) |
 | Python packages | `psycopg` (binary), `psycopg_pool`, `fastapi`, `uvicorn`, `httpx` and `anthropic` 2.3 or newer at run time; pytest, pytest-cov, ruff, mypy, import-linter, pip-audit for development. Hash-pinned in `requirements.lock` and `requirements-dev.lock`; `make` installs them into `.venv/` | everything |
 | uv | optional, only for `make lock` | regenerating the lock files |
 
