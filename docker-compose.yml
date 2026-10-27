@@ -1,0 +1,45 @@
+# PostgreSQL for the queue and the effects tables. The app services are behind the "app" profile:
+#   docker compose --profile app up --build
+services:
+  postgres:
+    image: postgres:16
+    container_name: ai-event-driven-ai-worker-postgres
+    # A local teaching database: no fsync, so a restart after a crash does not stall on a busy disk. The crash
+    # tests kill the worker process, never this server. Do not copy these two flags into a real deployment.
+    command: ["postgres", "-c", "fsync=off", "-c", "synchronous_commit=off"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-inbox}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (make up copies .env.example)}
+      POSTGRES_DB: ${POSTGRES_DB:-inbox}
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-inbox} -d ${POSTGRES_DB:-inbox}"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  webhook:
+    profiles: ["app"]
+    build: .
+    image: ai-event-driven-ai-worker:dev
+    command: ["inbox-worker", "serve-webhook"]
+    environment: &app_env
+      DATABASE_URL: postgresql://${POSTGRES_USER:-inbox}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-inbox}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:?set WEBHOOK_SECRET in .env}
+      MODEL_ADAPTER: ${MODEL_ADAPTER:-fake}
+      HOST: 0.0.0.0
+    ports:
+      - "8090:8090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  worker:
+    profiles: ["app"]
+    image: ai-event-driven-ai-worker:dev
+    command: ["inbox-worker", "worker"]
+    environment: *app_env
+    depends_on:
+      postgres:
+        condition: service_healthy
