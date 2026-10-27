@@ -169,6 +169,66 @@ export
 - `-include .env`: Read the file `.env` and treat each `NAME=value` line as a make variable. The leading `-` means: do not fail if the file does not exist.
 - `export`: Pass every make variable to the commands that make runs, as environment variables. This is how settings in `.env` reach the Python programs.
 
+
+<!-- extras -->
+### `.env.example`, every line
+
+This file is a template. `make` copies it to `.env` the first time, and the program reads `.env` for its settings. A line `NAME=value` sets one environment variable; a line starting with `#` is a comment. Nothing secret is stored in the template: the line for the API key is empty on purpose.
+
+```dotenv
+# Copy to .env (make up does it). The values below are throwaway values for a database that lives only on this machine.
+LOG_LEVEL=INFO
+POSTGRES_USER=inbox
+POSTGRES_PASSWORD=inbox-local-only
+POSTGRES_DB=inbox
+POSTGRES_PORT=5434
+# The webhook secret signs "timestamp.body" with HMAC-SHA256; use a long random value anywhere real
+WEBHOOK_SECRET=local-only-webhook-secret-change-me
+WEBHOOK_PORT=8090
+HOST=127.0.0.1
+# fake: delay, error rate and rate limit below; recorded: tests/fixtures/cassettes/smoke-v1.json; claude: the real API
+MODEL_ADAPTER=fake
+```
+
+- `LOG_LEVEL=INFO`: sets the environment variable `LOG_LEVEL` to the value `INFO`. The comment above it says: *Copy to .env (make up does it). The values below are throwaway values for a database that lives only on this machine.*
+- `POSTGRES_USER=inbox`: sets the environment variable `POSTGRES_USER` to the value `inbox`.
+- `POSTGRES_PASSWORD=inbox-local-only`: sets the environment variable `POSTGRES_PASSWORD` to the value `inbox-local-only`.
+- `POSTGRES_DB=inbox`: sets the environment variable `POSTGRES_DB` to the value `inbox`.
+- `POSTGRES_PORT=5434`: sets the environment variable `POSTGRES_PORT` to the value `5434`.
+- `WEBHOOK_SECRET=local-only-webhook-secret-change-me`: sets the environment variable `WEBHOOK_SECRET` to the value `local-only-webhook-secret-change-me`. The comment above it says: *The webhook secret signs "timestamp.body" with HMAC-SHA256; use a long random value anywhere real*
+- `WEBHOOK_PORT=8090`: sets the environment variable `WEBHOOK_PORT` to the value `8090`.
+- `HOST=127.0.0.1`: sets the environment variable `HOST` to the value `127.0.0.1`.
+- `MODEL_ADAPTER=fake`: sets the environment variable `MODEL_ADAPTER` to the value `fake`. The comment above it says: *fake: delay, error rate and rate limit below; recorded: tests/fixtures/cassettes/smoke-v1.json; claude: the real API*
+
+```dotenv
+FAKE_MODEL_DELAY_SECONDS=0
+FAKE_MODEL_ERROR_RATE=0
+FAKE_MODEL_MAX_RPS=0
+MODEL_ID=claude-haiku-5-5
+# Only for MODEL_ADAPTER=claude and make test-live. Never commit a real key.
+ANTHROPIC_API_KEY=
+CONCURRENCY=5
+LEASE_SECONDS=30
+MAX_ATTEMPTS=5
+BACKOFF_BASE_SECONDS=0.5
+BACKOFF_CAP_SECONDS=30
+EVENT_DEADLINE_SECONDS=300
+```
+
+- `FAKE_MODEL_DELAY_SECONDS=0`: sets the environment variable `FAKE_MODEL_DELAY_SECONDS` to the value `0`.
+- `FAKE_MODEL_ERROR_RATE=0`: sets the environment variable `FAKE_MODEL_ERROR_RATE` to the value `0`.
+- `FAKE_MODEL_MAX_RPS=0`: sets the environment variable `FAKE_MODEL_MAX_RPS` to the value `0`.
+- `MODEL_ID=claude-haiku-5-5`: sets the environment variable `MODEL_ID` to the value `claude-haiku-5-5`.
+- `ANTHROPIC_API_KEY=`: sets the environment variable `ANTHROPIC_API_KEY` to an empty value (nothing is set). The comment above it says: *Only for MODEL_ADAPTER=claude and make test-live. Never commit a real key.*
+- `CONCURRENCY=5`: sets the environment variable `CONCURRENCY` to the value `5`.
+- `LEASE_SECONDS=30`: sets the environment variable `LEASE_SECONDS` to the value `30`.
+- `MAX_ATTEMPTS=5`: sets the environment variable `MAX_ATTEMPTS` to the value `5`.
+- `BACKOFF_BASE_SECONDS=0.5`: sets the environment variable `BACKOFF_BASE_SECONDS` to the value `0.5`.
+- `BACKOFF_CAP_SECONDS=30`: sets the environment variable `BACKOFF_CAP_SECONDS` to the value `30`.
+- `EVENT_DEADLINE_SECONDS=300`: sets the environment variable `EVENT_DEADLINE_SECONDS` to the value `300`.
+
+<!-- /extras -->
+
 ## Try it yourself
 
 Run these from the repository folder (after `make up`).

@@ -86,6 +86,44 @@ CMD ["inbox-worker", "serve-webhook"]
 
 **Verification status.** The Docker daemon failed before this image could be built, so the Dockerfile is untested. Pending capacity: run `make docker-build` after Docker Desktop is restarted with free disk (Docker.raw was at its 60 GiB cap on 2026-10-28).
 
+
+<!-- extras -->
+### `.dockerignore`, every line
+
+When Docker builds an image it first sends a folder (the *build context*) to the builder. `.dockerignore` lists paths that must not be sent. That keeps the image small, keeps secrets out, and stops a change in an ignored file from invalidating the build cache. Each line is a path pattern; a leading `#` starts a comment.
+
+```text
+.git
+.venv
+.env
+docs
+**/__pycache__
+.mypy_cache
+.ruff_cache
+.pytest_cache
+.coverage
+tests/unit
+tests/e2e
+tests/integration
+tests/live
+```
+
+- `.git`: leaves out the repository's history; the image does not need it.
+- `.venv`: leaves out the local Python environment; the image builds its own.
+- `.env`: leaves out local settings and secrets must never be baked into an image.
+- `docs`: leaves out documentation is not needed to run the program.
+- `**/__pycache__`: leaves out the paths matching this pattern from the build context.
+- `.mypy_cache`: leaves out mypy's cache.
+- `.ruff_cache`: leaves out ruff's cache.
+- `.pytest_cache`: leaves out pytest's cache.
+- `.coverage`: leaves out the coverage data file.
+- `tests/unit`: leaves out the paths matching this pattern from the build context.
+- `tests/e2e`: leaves out the paths matching this pattern from the build context.
+- `tests/integration`: leaves out the paths matching this pattern from the build context.
+- `tests/live`: leaves out the paths matching this pattern from the build context.
+
+<!-- /extras -->
+
 ## Try it yourself
 
 Run these from the repository folder (after `make up`).
