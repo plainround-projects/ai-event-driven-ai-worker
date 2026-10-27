@@ -124,6 +124,14 @@ make record                         # the same, written to tests/fixtures/casset
 make test-live                      # one real extraction
 ```
 
+## Pending verification
+
+- pending capacity: run `make docker-build` after Docker Desktop is restarted with free disk (Docker.raw was at its 60 GiB cap on 2026-10-28).
+- pending capacity: run `make bench-webhook` after Docker Desktop is restarted with free disk (Docker.raw was at its 60 GiB cap on 2026-10-28). The webhook p95 figures above were taken at a load average of 40 to 90 (146 to 246 ms): rerun for clean figures.
+- pending capacity: run `make burst` after Docker Desktop is restarted with free disk (Docker.raw was at its 60 GiB cap on 2026-10-28). The burst figures above were taken at a load average of 40 to 90: rerun for clean figures.
+
+Everything else in the Done-when table was run and passed, from a fresh clone, on 2026-10-27.
+
 ## Author and license
 
 Written by Sumit Srivastava. Released under the MIT License, see [LICENSE](LICENSE). Changes are in [CHANGELOG.md](CHANGELOG.md).
