@@ -2,6 +2,8 @@
 
 A worker for the support inbox. Each "email received" event, arriving through a signed webhook or straight from a queue, runs the support-email extractor, writes a ticket row and an acknowledgment to an outbox in one transaction, and a relay sends the acknowledgment through a fake mail sender that records every send. The queue is a PostgreSQL table read with row locks. The worker applies each event's effects once however often the queue delivers it, retries with jittered backoff, parks poison events in a dead-letter table with a reason, survives a kill at any point, and reports its throughput under a burst.
 
+Never used these tools before? [tech/README.md](tech/README.md) teaches each technology in this repository from zero, through its own files, with a ten-minute shortlist.
+
 | | |
 | --- | --- |
 | **Lesson** | `/prep/ai/project-event-driven-ai-worker`, "An event-driven worker that survives crashes and duplicates" (`data-structure-explainer/src/content/tracks/ai/111-project-event-driven-ai-worker.md` in the Plainround app) |
