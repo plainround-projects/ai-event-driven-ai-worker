@@ -9,7 +9,7 @@ A signed email event arrives through a webhook, waits in a PostgreSQL queue, and
 | Signature check | `domain/signature.py` | HMAC-SHA256 over `timestamp.body`, constant-time compare, a five-minute age limit, two distinct rejection reasons. Pure functions. |
 | Event decoding | `domain/events.py` | Turns a payload into an event or raises a permanent error with a reason: `malformed_event`, `event_too_large` (limit 100,000 bytes of email), `bad_encoding`. |
 | Backoff | `domain/backoff.py` | Exponential delay with full jitter and a cap. |
-| Webhook | `interfaces/webhook.py` | Verify, size-limit, enqueue, answer 202. The model is not imported here, so its latency cannot reach this path. |
+| Webhook | `interfaces/webhook.py` | Size-limit, verify, enqueue, answer 202. The model is not imported here, so its latency cannot reach this path. |
 | Queue | `infrastructure/postgres.py` (`PostgresQueue`) | The `deliveries` table: claim with `FOR UPDATE SKIP LOCKED`, lease expiry as redelivery, ack, retry with a delay, dead-letter, redrive. |
 | Handler | `application/handler.py` | One delivery to a final outcome: decode, skip a duplicate, check the deadline, run the model, apply the effects once, acknowledge. |
 | Extractor | `application/extraction.py` | One model call and one repair call; a schema failure after the repair is a permanent error. Prompt text and version come from `prompts/extract.v1.md`. |
@@ -50,11 +50,11 @@ outbox --relay--> fake mail sender (sent_mail, unique event id) --> mark sent
 
 ### One event, step by step
 
-1. The webhook checks the signature and the age, rejects a body over the size limit, inserts a `deliveries` row and answers 202. A tampered body and a replayed old request get 401 with different reasons.
+1. The webhook reads the body as a stream and rejects it with 413 as soon as it passes the size limit. It then checks the signature and the age, inserts a `deliveries` row and answers 202. A tampered body and a replayed old request get 401 with different reasons.
 2. A worker thread claims the row: status `processing`, attempts plus one, a lease of 30 seconds. If the process dies, the lease expires and the row is claimed again; that is the redelivery.
 3. The handler decodes the payload. Malformed JSON, a body over the limit and invalid UTF-8 are permanent: the delivery goes to `dead_letters` at once, with the reason, the attempt count, the last error and a 12-character hash of the payload.
 4. The handler reads `processed_events` fresh from the database. A hit means a twin delivery already finished: acknowledge and move on, no model call.
-5. The model call runs outside any transaction. A rate limit, a server error or a timeout is retryable: the row is released with `available_at` set to now plus a jittered delay. A schema failure after one repair is permanent. A fifth failed attempt or an event older than its deadline is parked too.
+5. The model call runs outside any transaction. A rate limit, a server error or a timeout is retryable: the row is released with `available_at` set to now plus a jittered delay. A schema failure after one repair is permanent, and so is any other model-call failure a retry will not fix: the delivery goes to `dead_letters` with the reason `permanent_error`. A fifth failed attempt or an event older than its deadline is parked too.
 6. One SQL statement inserts the processed mark (`ON CONFLICT DO NOTHING`), the ticket and the outbox row. If a twin delivery committed first, the mark insert returns nothing, the other two inserts select from it, and nothing is written.
 7. The delivery is acknowledged. A crash between step 6 and this one leaves a committed event and an unacknowledged row; the redelivery finds the mark in step 4.
 8. The relay sends each acknowledgment through the mail gateway. The send table has a unique event id, so a send repeated after a crash is refused and the row is just marked sent.
