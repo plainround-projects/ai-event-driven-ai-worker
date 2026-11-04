@@ -13,6 +13,24 @@ Never used these tools before? [tech/README.md](tech/README.md) teaches each tec
 
 **What the offline run is.** No model key was available to the build, so the model is a fake with a configurable delay, error rate and rate limit (`FakeModel`, a token bucket that raises a retryable error over its limit), and the 20-email "real-model smoke run" replays an authored cassette. The queue, the transactions, the retries, the crash recovery and the measurements are real; the model's answers and its limits are not. The Claude adapter, `make record` and the live test exist and have not been run. **All timings were taken on a machine under heavy load (load average 50 to 90, a Docker disk too slow to finish a crash recovery in minutes), so read the properties (nothing lost, nothing doubled) and the ratios, not the absolute numbers.**
 
+## Architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg">
+  <img alt="A sender posts a signed event to the Webhook, which verifies the signature and inserts a row in the deliveries table of PostgreSQL. The Worker claims rows for the Handler, which reads and writes the effects store and dead_letters, calls the Extractor and its ChatModel adapters, and acknowledges. The Outbox relay sends through a fake mail sender." src="docs/diagrams/architecture.svg">
+</picture>
+
+The queue is a table in the same database as the effects, so one statement can write the mark, the ticket and the outbox row while the model call stays outside it.
+
+## How one run flows
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/flow-dark.svg">
+  <img alt="One email event through ten rows: verify and enqueue, claim, decode, dedupe, call the model, write the effects in one statement, acknowledge, and relay the mail, with warning rows for a twin delivery and a crash before the acknowledgment." src="docs/diagrams/flow.svg">
+</picture>
+
+An event is applied once however often it is delivered, and the amber rows show a twin skipped before the model and a crash absorbed by the processed mark.
+
 ## Prerequisites
 
 | Tool | Version | Used for |

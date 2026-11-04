@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="912" viewBox="0 0 1200 912" role="img" aria-labelledby="t d">
+<title id="t">Architecture of ai-event-driven-ai-worker</title>
+<desc id="d">A sender posts a signed event to the Webhook, which checks the signature and inserts a row in the deliveries table of PostgreSQL. The Worker claims rows and gives them to the Handler, which reads and writes the effects store and the dead_letters table, calls the Extractor and its ChatModel adapters, and acknowledges the delivery. The Outbox relay reads the outbox and sends through a fake mail sender.</desc>
+<style>
+:root{--paper:#0d1117;--ink:#f5f4f8;--mute:#9a96ab;--accent:#6ec8ff;--good:#7ce0a1;--warn:#ffd166}
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;fill:var(--ink)}
+.title{font-family:Georgia,'Iowan Old Style','Times New Roman',serif;font-size:36px}
+.caption{font-size:16px;fill:var(--mute)}
+.name{font-size:20px;font-weight:600}
+.lane{font-size:17px;font-weight:600}
+.sub{font-size:15px;fill:var(--mute)}
+.label{font-size:15px}
+.tag{font-size:15px;fill:var(--mute)}
+.num{font-size:15px;font-weight:700;fill:var(--paper)}
+.legend{font-size:14px;fill:var(--mute)}
+.t-accent{fill:var(--accent)}
+.t-good{fill:var(--good)}
+.t-warn{fill:var(--warn)}
+.t-ink{fill:var(--ink)}
+.b{font-weight:600}
+.paper{fill:var(--paper);stroke:var(--mute);stroke-opacity:.3}
+.grid{fill:url(#grid)}
+.boundary{fill:var(--mute);fill-opacity:.035;stroke:var(--mute);stroke-opacity:.7;stroke-dasharray:6 5}
+.svc{fill:var(--accent);fill-opacity:.08;stroke:var(--accent);stroke-width:1.25}
+.store{fill:var(--mute);fill-opacity:.1;stroke:var(--mute);stroke-width:1.25}
+.rim{fill:none;stroke:var(--mute);stroke-width:1.25}
+.actor{fill:none;stroke:var(--mute);stroke-width:1.25}
+.slot{fill:var(--accent);fill-opacity:.14;stroke:var(--accent);stroke-width:1}
+.note{fill:var(--warn);fill-opacity:.09;stroke:var(--warn);stroke-width:1}
+.win{fill:var(--good);fill-opacity:.09;stroke:var(--good);stroke-width:1}
+.hair{fill:none;stroke:var(--mute);stroke-opacity:.4;stroke-width:1}
+.zone{fill:var(--accent);fill-opacity:.045;stroke:var(--accent);stroke-width:1.25;stroke-dasharray:6 5}
+.stop{fill:none;stroke:var(--warn);stroke-width:4;stroke-linecap:round}
+.mask{fill:var(--paper)}
+.sync,.async,.read,.fail,.ok{fill:none}
+.sync{stroke:var(--accent);stroke-width:1.75;marker-end:url(#a-sync)}
+.async{stroke:var(--accent);stroke-width:1.75;stroke-dasharray:8 6;marker-end:url(#a-async)}
+.read{stroke:var(--mute);stroke-width:1.75;stroke-linecap:round;stroke-dasharray:1 6;marker-end:url(#a-read)}
+.fail{stroke:var(--warn);stroke-width:2;marker-end:url(#a-fail)}
+.ok{stroke:var(--good);stroke-width:1.75;marker-end:url(#a-ok)}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warn)}
+.dot-g{fill:var(--good)}
+.head-sync,.head-async{stroke:var(--accent)}
+.head-sync{fill:var(--accent)}
+.head-async,.head-read{fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.head-read{stroke:var(--mute)}
+.head-fail{fill:var(--warn)}
+.head-ok{fill:var(--good)}
+.gridline{fill:none;stroke:var(--mute);stroke-opacity:.09}
+</style>
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path class="gridline" d="M40 0H0V40"/></pattern>
+<marker id="a-sync" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-sync" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-async" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-read" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-read" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-fail" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-ok" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="paper" x="0.5" y="0.5" width="1199" height="911" rx="16"/>
+<rect class="grid" x="1" y="1" width="1198" height="910" rx="16"/>
+<text class="title" x="48" y="68">An email event that survives crashes and duplicates</text>
+<text class="caption" x="48" y="100">The queue is a table. The model call sits outside every transaction, and one statement writes the effects.</text>
+
+<rect class="actor" x="48" y="176" width="168" height="72" rx="36"/>
+<text class="name" x="132" y="208" text-anchor="middle">sender</text>
+<text class="sub" x="132" y="230" text-anchor="middle">signed email event</text>
+<rect class="svc" x="296" y="176" width="208" height="92" rx="12"/>
+<text class="name" x="312" y="208">Webhook</text>
+<text class="sub" x="312" y="232">webhook.py</text>
+<text class="sub" x="312" y="254">verify, size, 202</text>
+<rect class="svc" x="608" y="176" width="216" height="92" rx="12"/>
+<text class="name" x="624" y="208">Signature check</text>
+<text class="sub" x="624" y="232">signature.py</text>
+<text class="sub" x="624" y="254">HMAC, 5-minute age</text>
+<rect class="svc" x="952" y="176" width="200" height="116" rx="12"/>
+<text class="name" x="968" y="208">ChatModel</text>
+<text class="sub" x="968" y="232">fake_model.py</text>
+<text class="sub" x="968" y="254">cassette.py</text>
+<text class="sub" x="968" y="276">claude_model.py</text>
+<rect class="note" x="48" y="340" width="240" height="116" rx="10"/>
+<text class="label b t-warn" x="64" y="370">make crash-test</text>
+<text class="sub" x="64" y="396">killed at after_model</text>
+<text class="sub" x="64" y="418">and after_commit:</text>
+<text class="sub" x="64" y="440">lost [], duplicated 0</text>
+<rect class="svc" x="360" y="340" width="208" height="92" rx="12"/>
+<text class="name" x="376" y="372">Worker</text>
+<text class="sub" x="376" y="396">worker.py</text>
+<text class="sub" x="376" y="418">bounded thread pool</text>
+<rect class="svc" x="656" y="340" width="232" height="116" rx="12"/>
+<text class="name" x="672" y="372">Handler</text>
+<text class="sub" x="672" y="396">handler.py</text>
+<text class="sub" x="672" y="418">dedupe, deadline</text>
+<text class="sub" x="672" y="440">ack, retry, dead-letter</text>
+<rect class="svc" x="976" y="340" width="176" height="92" rx="12"/>
+<text class="name" x="992" y="372">Extractor</text>
+<text class="sub" x="992" y="396">extraction.py</text>
+<text class="sub" x="992" y="418">one repair call</text>
+<rect class="boundary" x="264" y="492" width="888" height="214" rx="14"/>
+<text class="tag" x="280" y="520">PostgreSQL 16</text>
+<path class="store" d="M288 542a112 12 0 0 1 224 0v102a112 12 0 0 1 -224 0z"/>
+<path class="rim" d="M288 542a112 12 0 0 0 224 0"/>
+<text class="name" x="400" y="570" text-anchor="middle">deliveries</text>
+<text class="sub" x="400" y="592" text-anchor="middle">queued, processing</text>
+<text class="sub" x="400" y="614" text-anchor="middle">lease 30 s</text>
+<path class="store" d="M560 542a128 12 0 0 1 256 0v128a128 12 0 0 1 -256 0z"/>
+<path class="rim" d="M560 542a128 12 0 0 0 256 0"/>
+<text class="name" x="688" y="570" text-anchor="middle">effects</text>
+<text class="sub" x="688" y="592" text-anchor="middle">processed_events</text>
+<text class="sub" x="688" y="614" text-anchor="middle">tickets</text>
+<text class="sub" x="688" y="636" text-anchor="middle">outbox</text>
+<path class="store" d="M872 542a116 12 0 0 1 232 0v102a116 12 0 0 1 -232 0z"/>
+<path class="rim" d="M872 542a116 12 0 0 0 232 0"/>
+<text class="name" x="988" y="570" text-anchor="middle">dead_letters</text>
+<text class="sub" x="988" y="592" text-anchor="middle">reason, attempts</text>
+<text class="sub" x="988" y="614" text-anchor="middle">payload hash</text>
+<rect class="svc" x="560" y="746" width="256" height="84" rx="12"/>
+<text class="name" x="576" y="778">Outbox relay</text>
+<text class="sub" x="576" y="802">outbox.py</text>
+<text class="sub" x="576" y="824">send, mark sent</text>
+<rect class="svc" x="912" y="746" width="240" height="84" rx="12"/>
+<text class="name" x="928" y="778">Fake mail sender</text>
+<text class="sub" x="928" y="802">sent_mail table</text>
+<text class="sub" x="928" y="824">unique event id</text>
+<path class="sync" d="M216 212H296"/>
+<text class="label t-accent" x="228" y="202">POST</text>
+<path class="sync" d="M504 222H608"/>
+<text class="label t-accent" x="520" y="212">verify</text>
+<path class="sync" d="M312 268V532"/>
+<text class="label t-accent" x="324" y="470">insert</text>
+<path class="sync" d="M464 432V528"/>
+<text class="label t-accent" x="412" y="470">claim</text>
+<path class="sync" d="M568 386H656"/>
+<path class="sync" d="M888 386H976"/>
+<text class="label t-accent" x="900" y="376">extract</text>
+<path class="sync" d="M1060 340V292"/>
+<text class="label t-accent" x="1072" y="322">complete</text>
+<path class="sync" d="M700 456V530"/>
+<text class="label t-accent" x="712" y="484">one statement</text>
+<path class="sync" d="M680 456V478Q680 490 668 490H504Q492 490 492 502V530"/>
+<text class="label t-accent" x="560" y="480">ack, retry</text>
+<path class="fail" d="M840 456V484Q840 496 852 496H976Q988 496 988 508V530"/>
+<text class="label t-warn" x="856" y="486">reason</text>
+<path class="read" d="M688 706V746"/>
+<path class="sync" d="M816 788H912"/>
+<text class="label t-accent" x="828" y="778">send</text>
+
+<path class="sync" d="M48 868H112"/><text class="legend" x="124" y="873">sync call</text>
+<path class="read" d="M520 868H584"/><text class="legend" x="596" y="873">read</text>
+<path class="fail" d="M696 868H760"/><text class="legend" x="772" y="873">failure path</text>
+</svg>

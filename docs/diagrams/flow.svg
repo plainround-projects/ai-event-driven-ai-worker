@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="t d">
+<title id="t">One email event through ai-event-driven-ai-worker</title>
+<desc id="d">Ten rows across the Webhook, deliveries, Handler, ChatModel and Effects store lanes. The webhook verifies and enqueues the event, the Handler claims it, decodes it, checks the processed mark, calls the model outside any transaction, writes mark, ticket and outbox in one statement and acknowledges. A warning row shows a twin delivery acknowledged without a model call, and another shows a crash before the acknowledgment. The relay then sends one mail per ticket.</desc>
+<style>
+:root{--paper:#ffffff;--ink:#10243d;--mute:#52677f;--accent:#0a6aa8;--good:#19743f;--warn:#8a5a00}
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;fill:var(--ink)}
+.title{font-family:Georgia,'Iowan Old Style','Times New Roman',serif;font-size:36px}
+.caption{font-size:16px;fill:var(--mute)}
+.name{font-size:20px;font-weight:600}
+.lane{font-size:17px;font-weight:600}
+.sub{font-size:15px;fill:var(--mute)}
+.label{font-size:15px}
+.tag{font-size:15px;fill:var(--mute)}
+.num{font-size:15px;font-weight:700;fill:var(--paper)}
+.legend{font-size:14px;fill:var(--mute)}
+.t-accent{fill:var(--accent)}
+.t-good{fill:var(--good)}
+.t-warn{fill:var(--warn)}
+.t-ink{fill:var(--ink)}
+.b{font-weight:600}
+.paper{fill:var(--paper);stroke:var(--mute);stroke-opacity:.3}
+.grid{fill:url(#grid)}
+.boundary{fill:var(--mute);fill-opacity:.035;stroke:var(--mute);stroke-opacity:.7;stroke-dasharray:6 5}
+.svc{fill:var(--accent);fill-opacity:.08;stroke:var(--accent);stroke-width:1.25}
+.store{fill:var(--mute);fill-opacity:.1;stroke:var(--mute);stroke-width:1.25}
+.rim{fill:none;stroke:var(--mute);stroke-width:1.25}
+.actor{fill:none;stroke:var(--mute);stroke-width:1.25}
+.slot{fill:var(--accent);fill-opacity:.14;stroke:var(--accent);stroke-width:1}
+.note{fill:var(--warn);fill-opacity:.09;stroke:var(--warn);stroke-width:1}
+.win{fill:var(--good);fill-opacity:.09;stroke:var(--good);stroke-width:1}
+.hair{fill:none;stroke:var(--mute);stroke-opacity:.4;stroke-width:1}
+.zone{fill:var(--accent);fill-opacity:.045;stroke:var(--accent);stroke-width:1.25;stroke-dasharray:6 5}
+.stop{fill:none;stroke:var(--warn);stroke-width:4;stroke-linecap:round}
+.mask{fill:var(--paper)}
+.sync,.async,.read,.fail,.ok{fill:none}
+.sync{stroke:var(--accent);stroke-width:1.75;marker-end:url(#a-sync)}
+.async{stroke:var(--accent);stroke-width:1.75;stroke-dasharray:8 6;marker-end:url(#a-async)}
+.read{stroke:var(--mute);stroke-width:1.75;stroke-linecap:round;stroke-dasharray:1 6;marker-end:url(#a-read)}
+.fail{stroke:var(--warn);stroke-width:2;marker-end:url(#a-fail)}
+.ok{stroke:var(--good);stroke-width:1.75;marker-end:url(#a-ok)}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warn)}
+.dot-g{fill:var(--good)}
+.head-sync,.head-async{stroke:var(--accent)}
+.head-sync{fill:var(--accent)}
+.head-async,.head-read{fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.head-read{stroke:var(--mute)}
+.head-fail{fill:var(--warn)}
+.head-ok{fill:var(--good)}
+.gridline{fill:none;stroke:var(--mute);stroke-opacity:.09}
+</style>
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path class="gridline" d="M40 0H0V40"/></pattern>
+<marker id="a-sync" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-sync" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-async" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-read" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-read" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-fail" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-ok" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="paper" x="0.5" y="0.5" width="1199" height="899" rx="16"/>
+<rect class="grid" x="1" y="1" width="1198" height="898" rx="16"/>
+<text class="title" x="48" y="68">One email event, from webhook to mail sent</text>
+<text class="caption" x="48" y="100">Amber: a twin delivery that is skipped, and a crash before the ack that the processed mark absorbs.</text>
+
+<rect class="svc" x="405" y="128" width="110" height="48" rx="10"/>
+<text class="lane" x="460" y="158" text-anchor="middle">Webhook</text>
+<rect class="svc" x="541" y="128" width="130" height="48" rx="10"/>
+<text class="lane" x="606" y="158" text-anchor="middle">deliveries</text>
+<rect class="svc" x="697" y="128" width="110" height="48" rx="10"/>
+<text class="lane" x="752" y="158" text-anchor="middle">Handler</text>
+<rect class="svc" x="836" y="128" width="120" height="48" rx="10"/>
+<text class="lane" x="896" y="158" text-anchor="middle">ChatModel</text>
+<rect class="svc" x="1015" y="128" width="110" height="48" rx="10"/>
+<text class="lane" x="1070" y="148" text-anchor="middle">Effects</text>
+<text class="lane" x="1070" y="168" text-anchor="middle">store</text>
+<path class="hair" d="M460 176V240M606 176V752M752 176V752M896 176V560M1070 176V816"/>
+<path class="hair" d="M66 216V792"/>
+<circle class="dot" cx="66" cy="216" r="15"/><text class="num" x="66" y="221" text-anchor="middle">1</text>
+<text class="label b t-ink" x="96" y="212">Verify and enqueue</text>
+<text class="sub" x="96" y="232">signature, age, size: then 202</text>
+<path class="sync" d="M460 216H606"/>
+<text class="label t-accent" x="472" y="206">INSERT, 202</text>
+<circle class="dot" cx="66" cy="280" r="15"/><text class="num" x="66" y="285" text-anchor="middle">2</text>
+<text class="label b t-ink" x="96" y="276">Claim the row</text>
+<text class="sub" x="96" y="296">lease 30 s, attempts plus one</text>
+<path class="sync" d="M752 280H606"/>
+<text class="label t-accent" x="618" y="270">claim</text>
+<circle class="dot" cx="66" cy="344" r="15"/><text class="num" x="66" y="349" text-anchor="middle">3</text>
+<text class="label b t-ink" x="96" y="340">Decode the payload</text>
+<text class="sub" x="96" y="360">bad ones go to dead_letters</text>
+<rect class="slot" x="746" y="326" width="12" height="36" rx="5"/>
+<text class="label t-accent" x="768" y="349">parse_event()</text>
+<circle class="dot" cx="66" cy="408" r="15"/><text class="num" x="66" y="413" text-anchor="middle">4</text>
+<text class="label b t-ink" x="96" y="404">Read the processed mark</text>
+<text class="sub" x="96" y="424">processed_events, fresh</text>
+<path class="sync" d="M752 408H1070"/>
+<text class="label t-accent" x="764" y="398">is_processed</text>
+<circle class="dot-w" cx="66" cy="472" r="15"/><text class="num" x="66" y="477" text-anchor="middle">4x</text>
+<text class="label b t-warn" x="96" y="468">A twin already finished</text>
+<text class="sub" x="96" y="488">ack, and no model call</text>
+<path class="fail" d="M752 472H606"/>
+<text class="label t-warn" x="618" y="462">ack</text>
+<circle class="dot" cx="66" cy="536" r="15"/><text class="num" x="66" y="541" text-anchor="middle">5</text>
+<text class="label b t-ink" x="96" y="532">Call the model</text>
+<text class="sub" x="96" y="552">outside any transaction</text>
+<path class="sync" d="M752 536H896"/>
+<text class="label t-accent" x="764" y="526">extract()</text>
+<circle class="dot" cx="66" cy="600" r="15"/><text class="num" x="66" y="605" text-anchor="middle">6</text>
+<text class="label b t-ink" x="96" y="596">One statement writes it all</text>
+<text class="sub" x="96" y="616">mark, ticket and outbox row</text>
+<path class="sync" d="M752 600H1070"/>
+<text class="label t-accent" x="764" y="590">apply()</text>
+<circle class="dot" cx="66" cy="664" r="15"/><text class="num" x="66" y="669" text-anchor="middle">7</text>
+<text class="label b t-ink" x="96" y="660">Acknowledge the delivery</text>
+<text class="sub" x="96" y="680">the row is marked done</text>
+<path class="sync" d="M752 664H606"/>
+<text class="label t-accent" x="618" y="654">ack</text>
+<circle class="dot-w" cx="66" cy="728" r="15"/><text class="num" x="66" y="733" text-anchor="middle">7x</text>
+<text class="label b t-warn" x="96" y="724">A crash before the ack</text>
+<text class="sub" x="96" y="744">the lease expires: redelivery</text>
+<path class="fail" d="M606 728H752"/>
+<text class="label t-warn" x="618" y="718">redelivered</text>
+<circle class="dot-g" cx="66" cy="792" r="15"/><text class="num" x="66" y="797" text-anchor="middle">8</text>
+<text class="label b t-ink" x="96" y="788">The relay sends the mail</text>
+<text class="sub" x="96" y="808">unique event id: one send</text>
+<rect class="slot" x="1064" y="774" width="12" height="36" rx="5"/>
+<text class="label t-accent" x="1086" y="797">send</text>
+<rect class="win" x="520" y="772" width="340" height="40" rx="10"/>
+<text class="label b t-good" x="536" y="797">990 events: 990 tickets, 990 mails</text>
+
+<path class="sync" d="M48 856H112"/><text class="legend" x="124" y="861">sync call</text>
+<path class="fail" d="M696 856H760"/><text class="legend" x="772" y="861">failure path</text>
+</svg>

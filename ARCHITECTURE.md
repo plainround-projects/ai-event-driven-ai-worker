@@ -27,6 +27,8 @@ The queue is a table, not a broker. That is the lesson's allowance ("a database 
 
 ## Data flow
 
+Drawn versions of this figure and of the walk-through: [the architecture](docs/diagrams/architecture.svg) and [one run](docs/diagrams/flow.svg).
+
 ```text
 sender -> webhook ---202---> deliveries (queued)
                                  |  claim: FOR UPDATE SKIP LOCKED, lease 30 s
